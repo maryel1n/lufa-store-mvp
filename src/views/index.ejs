@@ -1,15 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
 <%- include('partials/head') %>
-<body>
 <%- include('partials/navbar') %>
 
-<div class="container mt-5">
-    <h1 class="mb-4"><%= title %></h1>
-    <p>¡Tu servidor Express con EJS funciona!</p>
-</div>
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h1 class="fw-bold display-3 mb-3" style="font-family: inherit;">¡Cuida el planeta con cada compra!</h1>
+        <h4 class="mb-4 text-secondary">Productos ecológicos en envases retornables</h4>
+    </div>
 
+    <!-- Banner grande con imagen -->
+    <div class="mb-5">
+        <img src="/img/banner_lufa.png" class="img-fluid rounded shadow" alt="Lufa Store productos ecológicos" style="width: 100%; max-height: 360px; object-fit: cover;">
+    </div>
+
+    <!-- Productos destacados -->
+    <h5 class="mb-3">Productos Destacados</h5>
+    <div class="row">
+        <% destacados.forEach(function(producto) { %>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="/img/<%= producto.imagen %>" class="card-img-top" alt="<%= producto.nombre %>">
+                    <div class="card-body">
+                        <h6 class="card-title mb-1"><%= producto.nombre %></h6>
+                        <p class="card-text text-muted mb-1"><small>$<%= producto.precio.toLocaleString("es-CL") %></small></p>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JS (y Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <%- include('partials/footer') %>
-<script src="/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
