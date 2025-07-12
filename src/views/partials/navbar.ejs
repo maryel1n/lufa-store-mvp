@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-lg bg-white border border-1 rounded-0" style="border-color: #2b2f32 !important;">
+    <div class="container-fluid">
+        <!-- Ícono como logo -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="/img/logo_lufa.png" alt="Lufa Store" style="height: 64px; width: auto; margin-right: 3px;">
+            <span class="mi-tienda-nombre">Lufa Store</span>
+        </a>
+        <!-- Botón menú hamburguesa en móvil -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Menú">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Menú central SIN Inicio -->
+        <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Catálogo</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/catalogo">Ver Catálogo</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Carrito</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/carrito">Ver Carrito</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Checkout</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/checkout">Finalizar compra</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Perfil</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Mi cuenta</a></li>
+                        <li><a class="dropdown-item" href="#">Salir</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- Iconos a la derecha -->
+        <div class="d-flex align-items-center gap-3">
+            <a href="#" class="text-dark"><i class="bi bi-search fs-5"></i></a>
+            <a href="#" class="text-dark"><i class="bi bi-person fs-5"></i></a>
+            <a href="/carrito" class="text-dark"><i class="bi bi-bag fs-5"></i></a>
+        </div>
+    </div>
+</nav>
