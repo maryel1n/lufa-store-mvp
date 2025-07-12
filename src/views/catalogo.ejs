@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<%- include('partials/head') %>
+<body>
+<%- include('partials/navbar') %>
+
+<div class="main-content">
+    <div class="container my-5">
+        <div class="row g-4">
+            <% productos.forEach(producto => { %>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card h-100">
+                    <div class="ratio ratio-1x1">
+                        <img src="/img/<%= producto.imagen %>" alt="<%= producto.nombre %>" 
+                             class="card-img-top object-fit-cover" 
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="bg-light d-none align-items-center justify-content-center">
+                            <i class="bi bi-image fs-1 text-secondary"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title mb-1"><%= producto.nombre %></h6>
+                        <p class="card-text text-muted small mb-2"><%= producto.descripcion %></p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-primary">$<%= producto.precio.toLocaleString('es-CL') %></span>
+                            <small class="text-muted">Stock: <%= producto.stock %></small>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-outline-dark btn-sm btn-agregar-carrito"
+                                    data-id="<%= producto.id %>"
+                                    data-nombre="<%= producto.nombre %>"
+                                    data-precio="<%= producto.precio %>"
+                                    <%= producto.stock === 0 ? 'disabled' : '' %>>
+                                <i class="bi bi-cart-plus"></i>
+                                <%= producto.stock === 0 ? 'Sin stock' : 'Agregar' %>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search"></i></button>
+                            <button class="btn btn-outline-danger btn-sm"><i class="bi bi-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- Carrito Sidebar-->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="carritoOffcanvas" aria-labelledby="carritoOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="carritoOffcanvasLabel">Carrito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body position-relative">
+            <div id="carrito-lateral-lista">
+            </div>
+            <div class="d-flex justify-content-between fw-bold mt-3">
+                <span>Total:</span>
+                <span id="totalCarritoLateral">$0</span>
+            </div>
+            <div class="offcanvas-footer px-3">
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/carrito" class="btn btn-dark w-50">Ver carrito</a>
+                    <a href="/checkout" class="btn btn-dark w-50">Finalizar Compra</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/catalogo.js"></script>
+</body>
+</html>
