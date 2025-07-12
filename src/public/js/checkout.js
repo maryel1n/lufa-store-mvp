@@ -38,6 +38,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
             
+            // Deshabilitar botón para evitar múltiples envíos
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Procesando...';
+            
             try {
                 const response = await fetch('/api/comprar', {
                     method: 'POST',
@@ -48,13 +54,20 @@ document.addEventListener('DOMContentLoaded', async function () {
                 
                 const data = await response.json();
                 
-                if (data.success) {
-                    window.location.href = '/confirmacion';
+                if (data.success && data.redirect_url) {
+                    // Redirigir a la pasarela de pagos
+                    window.location.href = data.redirect_url;
                 } else {
+                    // Restaurar botón y mostrar error
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
                     alert(data.message || 'Error procesando la compra');
                 }
             } catch (error) {
                 console.error('Error procesando compra:', error);
+                // Restaurar botón en caso de error
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
                 alert('Error procesando la compra. Intente nuevamente.');
             }
         });
