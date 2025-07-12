@@ -4,11 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c775f3d9-cf51-47de-ae5b-d4ba8428ea5a" name="Changes" comment="" />
+    <list default="true" id="c775f3d9-cf51-47de-ae5b-d4ba8428ea5a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -25,6 +30,7 @@
     "Node.js.index.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "/Users/maryelinquintanilla/Downloads/carrito_mvp/src/public/img",
     "node.js.detected.package.eslint": "true",
@@ -62,7 +68,7 @@
       <workItem from="1751336059212" duration="249000" />
       <workItem from="1751336402723" duration="807000" />
       <workItem from="1751337302494" duration="735000" />
-      <workItem from="1752287742963" duration="1727000" />
+      <workItem from="1752287742963" duration="2385000" />
     </task>
     <servers />
   </component>
