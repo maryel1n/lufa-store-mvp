@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c775f3d9-cf51-47de-ae5b-d4ba8428ea5a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/public/img/banner_lufa.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/public/img/detergente.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/public/img/lavalozas.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/public/img/multiuso.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/index.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/partials/footer.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/partials/footer.ejs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +45,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -68,11 +76,23 @@
       <workItem from="1751336059212" duration="249000" />
       <workItem from="1751336402723" duration="807000" />
       <workItem from="1751337302494" duration="735000" />
-      <workItem from="1752287742963" duration="2385000" />
+      <workItem from="1752287742963" duration="6505000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/index.js</url>
+          <line>72</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

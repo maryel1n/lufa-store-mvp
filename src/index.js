@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Catálogo de productos hardcodeado con stock
+//Catálogo de productos hardcodeado con stock
 let productos = [
     { id: 1, nombre: "Polera Blanca", precio: 299990, stock: 100, imagen: "producto1.png", descripcion: "Polera Blanca" },
     { id: 2, nombre: "Polera Negra", precio: 899990, stock: 100, imagen: "producto2.png", descripcion: "Polera Negra" },
@@ -19,6 +19,24 @@ let productos = [
     { id: 8, nombre: "Teclado Mecánico RGB", precio: 129990, stock: 100, imagen: "producto2.png", descripcion: "Teclado mecánico para gaming con retroiluminación" }
 ];
 
+// Productos destacados SOLO para la página de inicio
+const destacados = [
+    {
+        nombre: "Detergente Eco",
+        imagen: "detergente.png",
+        precio: 5000
+    },
+    {
+        nombre: "Lavalozas",
+        imagen: "lavalozas.png",
+        precio: 4200
+    },
+    {
+        nombre: "Limpiador Multiuso",
+        imagen: "multiuso.png",
+        precio: 4500
+    }
+];
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'views'));
 
@@ -33,9 +51,14 @@ app.use(session({
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
 }));
 
+// Nueva ruta para la página de inicio con productos destacados
 app.get('/', (req, res) => {
-    res.redirect('/catalogo');
+    res.render('index', {
+        destacados,
+        title: 'Lufa Store - Inicio'
+    });
 });
+
 app.get('/catalogo', (req, res) => {
     res.render('catalogo', { title: 'Catálogo de Productos', productos: productos });
 });
@@ -166,6 +189,7 @@ app.post('/api/comprar', (req, res) => {
     
     res.json({ success: true, message: 'Compra realizada exitosamente' });
 });
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
