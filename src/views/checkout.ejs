@@ -50,7 +50,15 @@
                     </div>
                     <!-- 3. Selecciona Medio de Pago -->
                     <div>
-                        <h6 class="fw-bold mb-3">3. Selecciona Medio de Pago</h6>
+                        <h6 class="fw-bold mb-3">3. Método de Pago</h6>
+                        
+                        <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
+                            <i class="bi bi-shield-check me-2"></i>
+                            <div>
+                                <strong>Pago 100% Seguro:</strong> Serás redirigido a nuestra pasarela de pagos segura para completar tu transacción.
+                            </div>
+                        </div>
+                        
                         <div class="row mb-3 g-2">
                             <div class="col-md-4">
                                 <input type="radio" class="btn-check" name="metodoPago" id="credito" autocomplete="off" checked>
@@ -71,10 +79,13 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="row g-2">
-                            <div class="col-md-4"><input type="text" class="form-control" placeholder="Tarjeta de crédito"></div>
-                            <div class="col-md-4"><input type="text" class="form-control" placeholder="Nombre en la tarjeta"></div>
-                            <div class="col-md-4"><input type="text" class="form-control" placeholder="Fecha de vencimiento"></div>
+                        
+                        <div class="bg-light p-3 rounded">
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Los datos de tu tarjeta se procesarán de forma segura en nuestra pasarela de pagos certificada PCI DSS.
+                                No almacenamos información de tarjetas en nuestros servidores.
+                            </small>
                         </div>
                     </div>
                     <button class="btn btn-dark mt-4 w-100" type="submit">Confirmar pago</button>
