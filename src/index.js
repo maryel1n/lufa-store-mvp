@@ -9,16 +9,71 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 //Catálogo de productos hardcodeado con stock
 let productos = [
-    { id: 1, nombre: "Polera Blanca", precio: 299990, stock: 100, imagen: "producto1.png", descripcion: "Polera Blanca" },
-    { id: 2, nombre: "Polera Negra", precio: 899990, stock: 100, imagen: "producto2.png", descripcion: "Polera Negra" },
-    { id: 3, nombre: "Polera Azul", precio: 89990, stock: 100, imagen: "producto3.png", descripcion: "Polera Azul" },
-    { id: 4, nombre: "Tablet Pro 12", precio: 459990, stock: 100, imagen: "producto1.png", descripcion: "Tablet profesional con stylus incluido" },
-    { id: 5, nombre: "Smartwatch Sport", precio: 199990, stock: 100, imagen: "producto2.png", descripcion: "Reloj inteligente deportivo resistente al agua" },
-    { id: 6, nombre: "Cámara Mirrorless", precio: 649990, stock: 100, imagen: "producto3.png", descripcion: "Cámara profesional sin espejo 24MP" },
-    { id: 7, nombre: "Monitor 4K Ultra", precio: 349990, stock: 100, imagen: "producto1.png", descripcion: "Monitor 4K de 27 pulgadas para profesionales" },
-    { id: 8, nombre: "Teclado Mecánico RGB", precio: 129990, stock: 100, imagen: "producto2.png", descripcion: "Teclado mecánico para gaming con retroiluminación" }
+    {
+        id: 1,
+        nombre: "Detergente Eco",
+        precio: 5000,
+        stock: 100,
+        imagen: "detergente.png",
+        descripcion: "Detergente ecológico de 500ml en envase retornable"
+    },
+    {
+        id: 2,
+        nombre: "Lavalozas",
+        precio: 4500,
+        stock: 100,
+        imagen: "lavalozas.png",
+        descripcion: "Lavalozas biodegradable de 500ml en envase retornable"
+    },
+    {
+        id: 3,
+        nombre: "Limpiador Multiuso",
+        precio: 3800,
+        stock: 100,
+        imagen: "multiuso.png",
+        descripcion: "Limpiador multiuso de 300ml en envase retornable"
+    },
+    {
+        id: 4,
+        nombre: "Desinfectante 2L",
+        precio: 7200,
+        stock: 50,
+        imagen: "desinfectante.png",
+        descripcion: "Desinfectante ecológico para superficies, en envase de 2 litros retornable"
+    },
+    {
+        id: 5,
+        nombre: "Suavizante Natural",
+        precio: 5200,
+        stock: 80,
+        imagen: "suavizante.png",
+        descripcion: "Suavizante de ropa con fragancia natural, envase retornable"
+    },
+    {
+        id: 6,
+        nombre: "Limpia Vidrios Eco",
+        precio: 4000,
+        stock: 100,
+        imagen: "vidrios.png",
+        descripcion: "Limpiador ecológico para vidrios, envase retornable"
+    },
+    {
+        id: 7,
+        nombre: "Jabón Líquido Eco",
+        precio: 3900,
+        stock: 90,
+        imagen: "jabon.png",
+        descripcion: "Jabón líquido de manos ecológico, suave con la piel y el planeta"
+    },
+    {
+        id: 8,
+        nombre: "Pack Familiar Eco",
+        precio: 18990,
+        stock: 40,
+        imagen: "pack.png",
+        descripcion: "Pack ahorro con detergente, lavalozas y multiuso en envases retornables"
+    }
 ];
-
 // Productos destacados SOLO para la página de inicio
 const destacados = [
     {
