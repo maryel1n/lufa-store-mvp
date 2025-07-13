@@ -17,13 +17,15 @@
     <div class="row">
         <% destacados.forEach(function(producto) { %>
             <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <img src="/img/<%= producto.imagen %>" class="card-img-top" alt="<%= producto.nombre %>">
-                    <div class="card-body">
-                        <h6 class="card-title mb-1"><%= producto.nombre %></h6>
-                        <p class="card-text text-muted mb-1"><small>$<%= producto.precio.toLocaleString("es-CL") %></small></p>
+                <a href="/catalogo" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <img src="/img/<%= producto.imagen %>" class="card-img-top" alt="<%= producto.nombre %>">
+                        <div class="card-body">
+                            <h6 class="card-title mb-1"><%= producto.nombre %></h6>
+                            <p class="card-text text-muted mb-1"><small>$<%= producto.precio.toLocaleString("es-CL") %></small></p>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         <% }) %>
     </div>
