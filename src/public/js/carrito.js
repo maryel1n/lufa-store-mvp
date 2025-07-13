@@ -50,6 +50,21 @@ async function actualizarCantidad(id, cantidad) {
     }
 }
 
+// ----- DESHABILITAR BOTÓN FINALIZAR SI EL CARRITO ESTÁ VACÍO -----
+function actualizarEstadoBotonFinalizar() {
+    const btnFinalizar = document.getElementById('link-finalizar');
+    if (!btnFinalizar) return;
+    if (carrito.length === 0) {
+        btnFinalizar.classList.add('disabled');
+        btnFinalizar.setAttribute('aria-disabled', 'true');
+        btnFinalizar.onclick = (e) => e.preventDefault();
+    } else {
+        btnFinalizar.classList.remove('disabled');
+        btnFinalizar.removeAttribute('aria-disabled');
+        btnFinalizar.onclick = null;
+    }
+}
+
 // ----- RENDERIZAR LA VISTA CARRITO PRINCIPAL -----
 function renderCarrito() {
     const carritoLista = document.getElementById('carrito-lista');
@@ -127,6 +142,9 @@ function renderCarrito() {
             renderCarrito();
         };
     });
+
+    // ----- ACTUALIZA ESTADO DEL BOTÓN FINALIZAR -----
+    actualizarEstadoBotonFinalizar();
 }
 
 // ----- Renderiza el carrito al cargar la página -----

@@ -1,4 +1,4 @@
-// ----- FUNCIONES UTILITARIAS -----
+/// ----- FUNCIONES UTILITARIAS -----
 let carrito = [];
 
 async function cargarCarrito() {
@@ -72,9 +72,26 @@ async function actualizarCantidad(id, cantidad) {
     }
 }
 
+// ----- DESHABILITAR BOTÓN FINALIZAR COMPRA DEL SIDEBAR -----
+function actualizarEstadoBotonFinalizarSidebar() {
+    const btnFinalizar = document.getElementById('link-finalizar-sidebar');
+    if (btnFinalizar) {
+        if (carrito.length === 0) {
+            btnFinalizar.classList.add('disabled');
+            btnFinalizar.setAttribute('aria-disabled', 'true');
+            btnFinalizar.onclick = (e) => e.preventDefault();
+        } else {
+            btnFinalizar.classList.remove('disabled');
+            btnFinalizar.removeAttribute('aria-disabled');
+            btnFinalizar.onclick = null;
+        }
+    }
+}
+
 // ----- INICIALIZAR -----
 document.addEventListener('DOMContentLoaded', async () => {
     await cargarCarrito();
+    actualizarEstadoBotonFinalizarSidebar();
 });
 
 // ----- EVENTO "AGREGAR AL CARRITO" -----
@@ -83,9 +100,9 @@ document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
         const id = parseInt(this.getAttribute('data-id'));
         const nombre = this.getAttribute('data-nombre');
         const precio = parseFloat(this.getAttribute('data-precio'));
-        
+
         await agregarAlCarrito(id, nombre, precio);
-        
+
         var myOffcanvas = new bootstrap.Offcanvas(document.getElementById('carritoOffcanvas'));
         myOffcanvas.show();
         renderCarritoLateral();
@@ -160,6 +177,9 @@ function renderCarritoLateral() {
             renderCarritoLateral();
         };
     });
+
+    // --- ACTUALIZA EL ESTADO DEL BOTÓN FINALIZAR SIDEBAR ---
+    actualizarEstadoBotonFinalizarSidebar();
 }
 
 // ----- Mostrar el carrito lateral cada vez que se abre -----
