@@ -124,7 +124,10 @@ app.get('/checkout', (req, res) => {
     res.render('checkout', { title: 'Checkout' });
 });
 app.get('/confirmacion', (req, res) => {
-    res.render('confirmacion', { title: 'Confirmación de compra' });
+    res.render('confirmacion', {
+        title: 'Confirmación de compra',
+        session: req.session
+    });
 });
 
 // API endpoints para productos
@@ -287,30 +290,18 @@ app.post('/api/comprar', async (req, res) => {
 
 // Endpoint para manejar el retorno de la pasarela de pagos
 app.get('/payment-return', async (req, res) => {
-    const { token } = req.query;
+    const { token, status } = req.query;
     
-    if (!token || !req.session.pendingPayment || req.session.pendingPayment.token !== token) {
-        return res.redirect('/checkout?error=invalid_payment');
+    if (!token) {
+        return res.redirect('/checkout?error=no_token');
     }
     
-    try {
-        // Confirmar el pago en la pasarela
-        const commitResponse = await fetch('http://localhost:3010/commit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ token })
-        });
+    // Lógica super simple para demostración
+    if (status === 'approved') {
+        // Simular pago exitoso
         
-        if (!commitResponse.ok) {
-            throw new Error('Error confirmando pago');
-        }
-        
-        const paymentResult = await commitResponse.json();
-        
-        if (paymentResult.status === 'AUTHORIZED') {
-            // Procesar la compra: descontar stock
+        // Procesar carrito si existe
+        if (req.session.pendingPayment && req.session.pendingPayment.carrito) {
             const carrito = req.session.pendingPayment.carrito;
             
             for (const item of carrito) {
@@ -320,36 +311,33 @@ app.get('/payment-return', async (req, res) => {
                 }
             }
             
-            // Guardar información del pago exitoso
-            req.session.lastPayment = {
-                success: true,
-                amount: req.session.pendingPayment.amount,
-                buy_order: req.session.pendingPayment.buy_order,
-                authorization_code: paymentResult.authorization_code,
-                token: token
-            };
-            
-            // Limpiar carrito y pago pendiente
+            // Limpiar carrito
             req.session.carrito = [];
-            delete req.session.pendingPayment;
-            
-            res.redirect('/confirmacion');
-        } else {
-            throw new Error('Pago no autorizado');
         }
-        
-    } catch (error) {
-        console.error('Error procesando retorno de pago:', error);
-        
-        // Guardar información del pago fallido
+
+        // Simular datos de pago exitoso
+        req.session.lastPayment = {
+            success: true,
+            amount: req.session.pendingPayment ? req.session.pendingPayment.amount : 25000,
+            buy_order: req.session.pendingPayment ? req.session.pendingPayment.buy_order : `DEMO_${Date.now()}`,
+            authorization_code: `AUTH_${Math.random().toString(36).substr(2, 8).toUpperCase()}`,
+            token: token,
+            card_type: 'Visa',
+            card_last_four: '1111'
+        };
+
+        // Limpiar pago pendiente
+        delete req.session.pendingPayment;
+
+    } else {
+        // Simular pago fallido
         req.session.lastPayment = {
             success: false,
-            error: 'Error procesando el pago'
+            error: 'Fondos insuficientes'
         };
-        
-        // Mantener el pago pendiente para reintentar
-        res.redirect('/confirmacion');
     }
+
+    res.redirect('/confirmacion');
 });
 
 const PORT = 3000;
