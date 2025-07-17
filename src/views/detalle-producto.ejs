@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Producto | Lufa Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet"><!-- Asume mismo CSS del catálogo -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- HEADER -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            <img src="/img/logo.svg" alt="Lufa Store" width="32" class="me-2 align-text-bottom">
+            Lufa Store
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/catalogo">Catálogo</a></li>
+                <li class="nav-item"><a class="nav-link" href="/seguimiento">Seguimiento de pedido</a></li>
+                <li class="nav-item">
+                    <button type="button" class="btn btn-outline-success ms-3" data-bs-toggle="offcanvas" data-bs-target="#carritoOffcanvas">
+                        <i class="bi bi-cart"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="container py-5" style="max-width: 960px;">
+    <div class="row g-5">
+        <!-- Imagen del producto -->
+        <div class="col-md-6">
+            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                <img id="producto-imagen" src="/img/detergente.png" alt="Nombre del producto" class="img-fluid h-100 object-fit-contain" style="max-height: 360px;">
+            </div>
+        </div>
+        <!-- Info y acciones -->
+        <div class="col-md-6 d-flex flex-column justify-content-between">
+            <div>
+                <h1 class="h3 mb-3" id="producto-nombre">Detergente Eco</h1>
+                <div class="mb-2 text-success h4" id="producto-precio">$5.000</div>
+                <p class="mb-3 text-muted" id="producto-descripcion">Detergente ecológico en envase retornable. Limpieza eficaz y sustentable.</p>
+
+                <div class="mb-3">
+                    <label class="form-label mb-1">Volumen:</label>
+                    <select class="form-select w-auto d-inline-block" id="producto-volumen">
+                        <option value="500">500 ml</option>
+                        <option value="1000">1 L</option>
+                        <option value="2000">2 L</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label mb-1">Cantidad:</label>
+                    <div class="input-group w-auto">
+                        <button class="btn btn-outline-secondary" type="button" id="btn-restar">-</button>
+                        <input type="number" class="form-control text-center" id="producto-cantidad" value="1" min="1" style="max-width: 64px;">
+                        <button class="btn btn-outline-secondary" type="button" id="btn-sumar">+</button>
+                    </div>
+                </div>
+
+                <button id="btn-agregar-carrito" class="btn btn-success btn-lg w-100 mb-2">
+                    <i class="bi bi-cart-plus me-2"></i>Agregar al carrito
+                </button>
+
+                <div id="mensaje-stock" class="small text-muted mt-2">Stock disponible: <span id="producto-stock">100</span> unidades</div>
+            </div>
+
+            <div class="mt-4">
+                <h6 class="fw-bold">Características</h6>
+                <ul class="mb-0">
+                    <li>Ecológico y biodegradable</li>
+                    <li>Envase retornable</li>
+                    <li>Apto para todo tipo de ropa</li>
+                    <!-- Personaliza según producto -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de descripción extendida / ingredientes / beneficios -->
+    <div class="row mt-5">
+        <div class="col-12 col-md-8">
+            <h5>Descripción ampliada</h5>
+            <p id="producto-descripcion-extendida">
+                Nuestro detergente ecológico está formulado con ingredientes biodegradables, cuidando tu ropa y el planeta. Ideal para familias comprometidas con el medio ambiente.
+            </p>
+        </div>
+    </div>
+</main>
+
+<!-- SIDEBAR DEL CARRITO (Offcanvas) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="carritoOffcanvas" aria-labelledby="carritoOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="carritoOffcanvasLabel">Tu carrito</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div id="carrito-lateral-lista"></div>
+        <hr>
+        <div class="d-flex justify-content-between fw-bold">
+            <span>Total:</span>
+            <span id="totalCarritoLateral">$0</span>
+        </div>
+        <a href="/carrito" class="btn btn-link w-100 mt-3">Ver carrito completo</a>
+        <a href="/checkout" class="btn btn-success w-100 mt-2" id="link-finalizar-sidebar">Finalizar compra</a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="bg-light py-4 border-top mt-5">
+    <div class="container text-center small text-muted">
+        © 2025 Lufa Store · Productos ecológicos en envases retornables
+    </div>
+</footer>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/carrito.js"></script>
+<!-- Aquí irá el script de detalle-producto.js para la lógica personalizada -->
+</body>
+</html>
