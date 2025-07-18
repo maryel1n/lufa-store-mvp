@@ -13,7 +13,7 @@ const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Configurar Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || ***REMOVED***);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY );
 
 //Catálogo de productos hardcodeado con stock
 let productos = [
