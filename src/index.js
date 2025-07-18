@@ -15,6 +15,18 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // Configurar Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY );
 
+// Array para almacenar pedidos
+let pedidos = [];
+
+// Función para calcular estado del pedido según tiempo transcurrido
+function calcularEstadoPedido(fechaCreacion) {
+    const tiempoTranscurrido = (Date.now() - fechaCreacion) / 1000;
+    if (tiempoTranscurrido < 30) return { estado: 'confirmado', descripcion: 'Pago confirmado' };
+    if (tiempoTranscurrido < 60) return { estado: 'preparando', descripcion: 'Preparando tu pedido' };
+    if (tiempoTranscurrido < 120) return { estado: 'despacho', descripcion: 'En camino' };
+    return { estado: 'entregado', descripcion: 'Entregado' };
+}
+
 //Catálogo de productos hardcodeado con stock
 let productos = [
     {
@@ -135,6 +147,14 @@ app.get('/confirmacion', (req, res) => {
     res.render('confirmacion', {
         title: 'Confirmación de compra',
         session: req.session
+    });
+});
+
+app.get('/mis-pedidos', (req, res) => {
+    res.render('mis-pedidos', {
+        title: 'Mis Pedidos',
+        pedidos: pedidos,
+        calcularEstadoPedido: calcularEstadoPedido
     });
 });
 
@@ -324,6 +344,19 @@ app.get('/payment-success', async (req, res) => {
                         producto.stock -= item.cantidad;
                     }
                 }
+                
+                // Crear registro del pedido
+                const pedido = {
+                    numero: session.metadata.buy_order,
+                    fecha: Date.now(),
+                    productos: [...carrito],
+                    total: req.session.pendingPayment.amount,
+                    payment_intent: session.payment_intent,
+                    session_id: session_id
+                };
+                
+                // Agregar pedido al array
+                pedidos.push(pedido);
                 
                 // Limpiar carrito
                 req.session.carrito = [];
