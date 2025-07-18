@@ -3,9 +3,29 @@ import session from 'express-session';
 import morgan from 'morgan';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import Stripe from 'stripe';
+import dotenv from 'dotenv';
+
+// Cargar variables de entorno
+dotenv.config();
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Configurar Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY );
+
+// Array para almacenar pedidos
+let pedidos = [];
+
+// Función para calcular estado del pedido según tiempo transcurrido
+function calcularEstadoPedido(fechaCreacion) {
+    const tiempoTranscurrido = (Date.now() - fechaCreacion) / 1000;
+    if (tiempoTranscurrido < 30) return { estado: 'confirmado', descripcion: 'Pago confirmado' };
+    if (tiempoTranscurrido < 60) return { estado: 'preparando', descripcion: 'Preparando tu pedido' };
+    if (tiempoTranscurrido < 120) return { estado: 'despacho', descripcion: 'En camino' };
+    return { estado: 'entregado', descripcion: 'Entregado' };
+}
 
 //Catálogo de productos hardcodeado con stock
 let productos = [
@@ -100,10 +120,10 @@ app.use(express.json());
 app.use(express.static(join(__dirname, 'public')));
 
 app.use(session({
-    secret: 'carrito-mvp-secret-key',
+    secret: process.env.SESSION_SECRET || 'carrito-mvp-secret-key',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 horas
 }));
 
 // Nueva ruta para la página de inicio con productos destacados
@@ -127,6 +147,14 @@ app.get('/confirmacion', (req, res) => {
     res.render('confirmacion', {
         title: 'Confirmación de compra',
         session: req.session
+    });
+});
+
+app.get('/mis-pedidos', (req, res) => {
+    res.render('mis-pedidos', {
+        title: 'Mis Pedidos',
+        pedidos: pedidos,
+        calcularEstadoPedido: calcularEstadoPedido
     });
 });
 
@@ -219,7 +247,7 @@ app.post('/api/carrito/limpiar', (req, res) => {
     res.json({ success: true, carrito: [] });
 });
 
-// Endpoint para procesar compra y descontar stock
+// Endpoint para procesar compra con Stripe
 app.post('/api/comprar', async (req, res) => {
     if (!req.session.carrito || req.session.carrito.length === 0) {
         return res.status(400).json({ success: false, message: 'Carrito vacío' });
@@ -243,104 +271,129 @@ app.post('/api/comprar', async (req, res) => {
     }, 0);
     
     try {
-        // Crear transacción en la pasarela de pagos
-        const paymentData = {
-            amount: total,
-            buy_order: `LUFA_${Date.now()}`,
-            session_id: req.sessionID,
-            return_url: `http://localhost:3000/payment-return`
-        };
-        
-        const response = await fetch('http://localhost:3010/transactions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(paymentData)
+        // Crear sesión de pago con Stripe
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: req.session.carrito.map(item => {
+                const producto = productos.find(p => p.id === item.id);
+                return {
+                    price_data: {
+                        currency: 'clp',
+                        product_data: {
+                            name: item.nombre,
+                            description: producto.descripcion
+                        },
+                        unit_amount: producto.precio
+                    },
+                    quantity: item.cantidad
+                };
+            }),
+            mode: 'payment',
+            success_url: `${process.env.BASE_URL || 'http://localhost:3000'}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL || 'http://localhost:3000'}/checkout?cancelled=true`,
+            metadata: {
+                buy_order: `LUFA_${Date.now()}`,
+                session_id: req.sessionID
+            }
         });
         
-        if (!response.ok) {
-            throw new Error('Error creando transacción en pasarela');
-        }
-        
-        const paymentResponse = await response.json();
-        
-        // Guardar información de la transacción en la sesión
+        // Guardar información de la transacción pendiente
         req.session.pendingPayment = {
-            token: paymentResponse.token,
+            stripe_session_id: session.id,
             amount: total,
-            buy_order: paymentData.buy_order,
-            carrito: [...req.session.carrito] // Copia del carrito para procesar después
+            buy_order: `LUFA_${Date.now()}`,
+            carrito: [...req.session.carrito]
         };
         
         res.json({ 
             success: true, 
-            redirect_url: paymentResponse.url,
-            token: paymentResponse.token
+            redirect_url: session.url,
+            session_id: session.id
         });
         
     } catch (error) {
-        console.error('Error procesando pago:', error);
-        res.status(500).json({ 
+        console.error('Error creando sesión de Stripe:', error);
+        res.status(500).json({
             success: false, 
-            message: 'Error conectando con la pasarela de pagos' 
+            message: 'Error procesando el pago'
         });
     }
 });
 
-// Endpoint para manejar el retorno de la pasarela de pagos
-app.get('/payment-return', async (req, res) => {
-    const { token, status } = req.query;
-    
-    if (!token) {
-        return res.redirect('/checkout?error=no_token');
+// Endpoint para manejar el éxito del pago con Stripe
+app.get('/payment-success', async (req, res) => {
+    const { session_id } = req.query;
+
+    if (!session_id) {
+        return res.redirect('/checkout?error=no_session');
     }
     
-    // Lógica super simple para demostración
-    if (status === 'approved') {
-        // Simular pago exitoso
-        
-        // Procesar carrito si existe
-        if (req.session.pendingPayment && req.session.pendingPayment.carrito) {
-            const carrito = req.session.pendingPayment.carrito;
-            
-            for (const item of carrito) {
-                const producto = productos.find(p => p.id === item.id);
-                if (producto) {
-                    producto.stock -= item.cantidad;
+    try {
+        // Recuperar la sesión de Stripe
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+
+        if (session.payment_status === 'paid') {
+            // Procesar carrito si existe
+            if (req.session.pendingPayment && req.session.pendingPayment.carrito) {
+                const carrito = req.session.pendingPayment.carrito;
+
+                // Descontar stock
+                for (const item of carrito) {
+                    const producto = productos.find(p => p.id === item.id);
+                    if (producto) {
+                        producto.stock -= item.cantidad;
+                    }
                 }
+
+                // Crear registro del pedido
+                const pedido = {
+                    numero: session.metadata.buy_order,
+                    fecha: Date.now(),
+                    productos: [...carrito],
+                    total: req.session.pendingPayment.amount,
+                    payment_intent: session.payment_intent,
+                    session_id: session_id
+                };
+
+                // Agregar pedido al array
+                pedidos.push(pedido);
+
+                // Limpiar carrito
+                req.session.carrito = [];
             }
-            
-            // Limpiar carrito
-            req.session.carrito = [];
+
+            // Guardar datos del pago exitoso
+            req.session.lastPayment = {
+                success: true,
+                amount: req.session.pendingPayment ? req.session.pendingPayment.amount : session.amount_total / 100,
+                buy_order: session.metadata.buy_order,
+                payment_intent: session.payment_intent,
+                session_id: session_id,
+                payment_method: 'Stripe'
+            };
+
+            // Limpiar pago pendiente
+            delete req.session.pendingPayment;
+
+        } else {
+            req.session.lastPayment = {
+                success: false,
+                error: 'Pago no completado'
+            };
         }
 
-        // Simular datos de pago exitoso
-        req.session.lastPayment = {
-            success: true,
-            amount: req.session.pendingPayment ? req.session.pendingPayment.amount : 25000,
-            buy_order: req.session.pendingPayment ? req.session.pendingPayment.buy_order : `DEMO_${Date.now()}`,
-            authorization_code: `AUTH_${Math.random().toString(36).substr(2, 8).toUpperCase()}`,
-            token: token,
-            card_type: 'Visa',
-            card_last_four: '1111'
-        };
-
-        // Limpiar pago pendiente
-        delete req.session.pendingPayment;
-
-    } else {
-        // Simular pago fallido
+    } catch (error) {
+        console.error('Error verificando pago:', error);
         req.session.lastPayment = {
             success: false,
-            error: 'Fondos insuficientes'
+            error: 'Error verificando el pago'
         };
     }
 
     res.redirect('/confirmacion');
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });
