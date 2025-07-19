@@ -18,18 +18,12 @@
                             
                             <div class="bg-light p-3 rounded mt-4 mb-4">
                                 <h5>Detalles del Pago</h5>
-<<<<<<< HEAD
-                                <p><strong>Monto:</strong> $<%= locals.session.lastPayment.amount.toLocaleString('es-CL') %></p>
-                                <p><strong>Orden:</strong> <%= locals.session.lastPayment.buy_order %></p>
-                                <p><strong>Código de Autorización:</strong> <%= locals.session.lastPayment.authorization_code %></p>
-=======
                                 <p><strong>Monto:</strong> $<%= locals.session.lastPayment.amount ? locals.session.lastPayment.amount.toLocaleString('es-CL') : '0' %></p>
                                 <p><strong>Orden:</strong> <%= locals.session.lastPayment.buy_order %></p>
                                 <% if (locals.session.lastPayment.payment_intent) { %>
                                     <p><strong>ID de Transacción:</strong> <%= locals.session.lastPayment.payment_intent %></p>
                                 <% } %>
                                 <p><strong>Método de Pago:</strong> <%= locals.session.lastPayment.payment_method || 'Stripe' %></p>
->>>>>>> feature/perfil-y-estado
                             </div>
                             
                             <p class="text-muted">Hemos recibido tu pedido y lo estamos procesando.</p>
@@ -58,10 +52,7 @@
                     
                     <div class="mt-4">
                         <a href="/catalogo" class="btn btn-primary">Volver al Catálogo</a>
-<<<<<<< HEAD
-=======
                         <a href="/mis-pedidos" class="btn btn-outline-primary ms-2">Ver Mis Pedidos</a>
->>>>>>> feature/perfil-y-estado
                         <a href="/carrito" class="btn btn-outline-secondary ms-2">Ver Carrito</a>
                     </div>
                 </div>
