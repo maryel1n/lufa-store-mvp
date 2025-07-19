@@ -13,14 +13,14 @@ async function cargarCarrito() {
 }
 
 // Agrega un producto usando el endpoint backend (igual que en catalogo.js)
-async function agregarAlCarrito(id, nombre, precio) {
+async function agregarAlCarrito(id, nombre, precio, imagen) {
     try {
         const response = await fetch('/api/carrito/agregar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id, nombre, precio })
+            body: JSON.stringify({ id, nombre, precio, imagen })
         });
         const data = await response.json();
         if (data.success) {
@@ -36,62 +36,82 @@ async function agregarAlCarrito(id, nombre, precio) {
     }
 }
 
-// Renderiza el sidebar del carrito (igual que en catalogo.js)
+// Renderiza el sidebar del carrito (ahora con la imagen del producto)
 function renderCarritoLateral() {
-    const lista = document.getElementById('carrito-lateral-lista');
-    if (!lista) return;
-    lista.innerHTML = '';
-
-    if (carrito.length === 0) {
-        lista.innerHTML = '<p class="text-center text-muted">Tu carrito está vacío.</p>';
-        document.getElementById('totalCarritoLateral').textContent = '$0';
-        return;
-    }
-
+    const contenedor = document.getElementById('carrito-lateral-lista');
+    contenedor.innerHTML = '';
     let total = 0;
-    carrito.forEach((item, i) => {
-        const subtotal = item.precio * item.cantidad;
-        total += subtotal;
-
-        const div = document.createElement('div');
-        div.className = 'd-flex align-items-center mb-2';
-        div.innerHTML = `
-            <div class="flex-grow-1">
-                <div class="fw-bold">${item.nombre}</div>
-                <div class="small text-muted">${item.cantidad} x $${item.precio.toLocaleString('es-CL')}</div>
+    if (carrito.length === 0) {
+        contenedor.innerHTML = `<p class="text-center text-muted my-5">El carrito está vacío.</p>`;
+    }
+    carrito.forEach(producto => {
+        total += producto.precio * producto.cantidad;
+        const item = document.createElement('div');
+        item.className = "mb-3 border-bottom pb-2";
+        item.innerHTML = `
+          <div class="d-flex align-items-center">
+            <div class="me-2 position-relative" style="width: 48px; height: 48px;">
+              <img src="/img/${producto.imagen}" alt="${producto.nombre}" 
+                   class="w-100 h-100 object-fit-cover rounded" 
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+              <div class="bg-light rounded d-none align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                <i class="bi bi-image text-secondary"></i>
+              </div>
             </div>
-            <button class="btn btn-outline-secondary btn-sm ms-2" data-action="restar" data-index="${i}">-</button>
-            <span class="mx-2">${item.cantidad}</span>
-            <button class="btn btn-outline-secondary btn-sm" data-action="sumar" data-index="${i}">+</button>
-            <button class="btn btn-link text-danger btn-sm ms-2" data-action="eliminar" data-index="${i}">
+            <div class="flex-grow-1">
+              <div>${producto.nombre}</div>
+              <small class="text-muted">$${producto.precio.toLocaleString('es-CL')}</small>
+            </div>
+            <div class="d-flex align-items-center gap-1 ms-2">
+              <button class="btn btn-outline-secondary btn-sm btn-restar" data-id="${producto.id}">-</button>
+              <span class="mx-1 cantidad" id="cantidad-lateral-${producto.id}">${producto.cantidad}</span>
+              <button class="btn btn-outline-secondary btn-sm btn-sumar" data-id="${producto.id}">+</button>
+              <button class="btn btn-link btn-sm text-danger btn-eliminar" data-id="${producto.id}">
                 <i class="bi bi-trash"></i>
-            </button>
+              </button>
+            </div>
+          </div>
         `;
-        lista.appendChild(div);
+        contenedor.appendChild(item);
     });
-
     document.getElementById('totalCarritoLateral').textContent = `$${total.toLocaleString('es-CL')}`;
 
-    // Eventos para sumar, restar y eliminar
-    lista.querySelectorAll('button[data-action]').forEach(btn => {
-        const action = btn.dataset.action;
-        const index = parseInt(btn.dataset.index);
+    // Botones sumar/restar/eliminar
+    document.querySelectorAll('.btn-sumar').forEach(btn => {
         btn.onclick = async () => {
-            if (action === 'restar' && carrito[index].cantidad > 1) {
-                await actualizarCantidadCarrito(carrito[index].id, carrito[index].cantidad - 1);
+            const id = parseInt(btn.dataset.id);
+            const producto = carrito.find(p => p.id === id);
+            if (producto) {
+                await actualizarCantidadCarrito(id, producto.cantidad + 1);
+                renderCarritoLateral();
             }
-            if (action === 'sumar') {
-                await actualizarCantidadCarrito(carrito[index].id, carrito[index].cantidad + 1);
-            }
-            if (action === 'eliminar') {
-                await eliminarProductoCarrito(carrito[index].id);
-            }
-            await cargarCarrito();
         };
     });
+    document.querySelectorAll('.btn-restar').forEach(btn => {
+        btn.onclick = async () => {
+            const id = parseInt(btn.dataset.id);
+            const producto = carrito.find(p => p.id === id);
+            if (producto && producto.cantidad > 1) {
+                await actualizarCantidadCarrito(id, producto.cantidad - 1);
+                renderCarritoLateral();
+            }
+        };
+    });
+    document.querySelectorAll('.btn-eliminar').forEach(btn => {
+        btn.onclick = async () => {
+            const id = parseInt(btn.dataset.id);
+            await eliminarProductoCarrito(id);
+            renderCarritoLateral();
+        };
+    });
+
+    // --- Actualiza el estado del botón finalizar ---
+    if (typeof actualizarEstadoBotonFinalizarSidebar === "function") {
+        actualizarEstadoBotonFinalizarSidebar();
+    }
 }
 
-// Actualiza cantidad en backend (igual que en catalogo.js)
+// Actualiza cantidad en backend
 async function actualizarCantidadCarrito(id, cantidad) {
     try {
         await fetch('/api/carrito/actualizar', {
@@ -106,7 +126,7 @@ async function actualizarCantidadCarrito(id, cantidad) {
     }
 }
 
-// Elimina producto en backend (igual que en catalogo.js)
+// Elimina producto en backend
 async function eliminarProductoCarrito(id) {
     try {
         await fetch('/api/carrito/eliminar', {
@@ -189,7 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
             await agregarAlCarrito(
                 productoActual.id,
                 productoActual.nombre,
-                productoActual.precio
+                productoActual.precio,
+                productoActual.imagen // AHORA incluye la imagen del producto
             );
         }
 
