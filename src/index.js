@@ -138,7 +138,9 @@ app.get('/catalogo', (req, res) => {
     res.render('catalogo', { title: 'Catálogo de Productos', productos: productos });
 });
 app.get('/detalle-producto', (req, res) => {
-    res.render('detalle-producto');
+    res.render('detalle-producto', {
+        title: 'Detalle del producto | Lufa Store'
+    });
 });
 app.get('/carrito', (req, res) => {
     res.render('carrito', { title: 'Carrito de Compras' });
