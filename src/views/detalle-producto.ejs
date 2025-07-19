@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Producto | Lufa Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body>
+<%- include('partials/navbar') %>
+
+<main class="container py-5" style="max-width: 960px;">
+    <div class="row g-4 align-items-center">
+        <!-- Imagen del producto -->
+        <div class="col-md-6">
+            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                <img id="producto-imagen" src="/img/detergente.png" alt="Nombre del producto" class="img-fluid h-100 object-fit-contain" style="max-height: 360px;">
+            </div>
+        </div>
+        <!-- Información y acciones -->
+        <div class="col-md-6">
+            <h1 class="h3 mb-3" id="producto-nombre">Detergente Eco</h1>
+            <div class="mb-2 text-success h4" id="producto-precio">$5.000</div>
+            <p class="mb-3 text-muted" id="producto-descripcion">Detergente ecológico en envase retornable. Limpieza eficaz y sustentable.</p>
+
+            <div class="mb-3">
+                <label class="form-label mb-1">Volumen:</label>
+                <select class="form-select w-auto d-inline-block" id="producto-volumen">
+                    <option value="500">500 ml</option>
+                    <option value="1000">1 L</option>
+                    <option value="2000">2 L</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mb-1">Cantidad:</label>
+                <div class="input-group w-auto">
+                    <button class="btn btn-outline-secondary" type="button" id="btn-restar">-</button>
+                    <input type="number" class="form-control text-center" id="producto-cantidad" value="1" min="1" style="max-width: 64px;">
+                    <button class="btn btn-outline-secondary" type="button" id="btn-sumar">+</button>
+                </div>
+            </div>
+
+            <button id="btn-agregar-carrito" class="btn btn-success btn-lg w-100 mb-2">
+                <i class="bi bi-cart-plus me-2"></i>Agregar al carrito
+            </button>
+
+            <div id="mensaje-stock" class="small text-muted mt-2">Stock disponible: <span id="producto-stock">100</span> unidades</div>
+
+            <div class="mt-4">
+                <h6 class="fw-bold">Características</h6>
+                <ul class="mb-0">
+                    <li>Ecológico y biodegradable</li>
+                    <li>Envase retornable</li>
+                    <li>Apto para todo tipo de ropa</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12 col-md-8">
+            <h5>Descripción ampliada</h5>
+            <p id="producto-descripcion-extendida">
+                Nuestro detergente ecológico está formulado con ingredientes biodegradables, cuidando tu ropa y el planeta. Ideal para familias comprometidas con el medio ambiente.
+            </p>
+        </div>
+    </div>
+</main>
+
+<!-- Carrito Sidebar-->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="carritoOffcanvas" aria-labelledby="carritoOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 id="carritoOffcanvasLabel">Carrito</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body position-relative">
+        <div id="carrito-lateral-lista">
+        </div>
+        <div class="d-flex justify-content-between fw-bold mt-3">
+            <span>Total:</span>
+            <span id="totalCarritoLateral">$0</span>
+        </div>
+        <div class="offcanvas-footer px-3">
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/carrito" class="btn btn-dark w-50">Ver carrito</a>
+                <a id="link-finalizar-sidebar" href="/checkout" class="btn btn-dark w-50">Finalizar Compra</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<%- include('partials/footer') %>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/detalle-producto.js"></script>
+</body>
+</html>

@@ -19,7 +19,11 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <h6 class="card-title mb-1"><%= producto.nombre %></h6>
+                        <h6 class="card-title mb-1">
+                            <a href="/detalle-producto?id=<%= producto.id %>" class="text-decoration-none text-dark">
+                                <%= producto.nombre %>
+                            </a>
+                        </h6>
                         <p class="card-text text-muted small mb-2"><%= producto.descripcion %></p>
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="fw-bold text-primary">$<%= producto.precio.toLocaleString('es-CL') %></span>
